@@ -1,27 +1,28 @@
-import React from "react";
-import { Navigate } from "react-router-dom";
-import { useAuth } from "../Context/AuthContext";
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../Context/AuthContext';
+import { Suspense } from 'react';
+import Loader from '../Pages/Loader';
 
 const ProtectedRoute = ({ children, role }) => {
-    const { user } = useAuth();
+    const { user, loading } = useAuth();
+    const navigate = useNavigate();
 
-    if (!user) {
-        return <Navigate to="/login" replace />;
-    }
-    if (user.role === 'admin') {
+    useEffect(() => {
+        if (!loading) {
+            if (!user || (role && user.userData?.role !== role)) {
+                navigate('/login');
+            }
+        }
+    }, [user, role, navigate, loading]);
 
-        return <Navigate to="/admin/dashboard" replace />;
-    }
+    if (loading) return null; // Optionally render a loader
 
-    // if (role && user.role !== role) {
-    //     return <Navigate to="/" replace />;
-    // }
-    if (user.role === 'admin') {
-
-        return <Navigate to="/profile" replace />;
-    }
-
-    return children;
-}
+    return <>
+        <Suspense fallback={<Loader message="Loading protected content..." />}>
+            {children}
+        </Suspense>
+    </>;
+};
 
 export default ProtectedRoute;

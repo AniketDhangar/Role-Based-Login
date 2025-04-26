@@ -1,7 +1,8 @@
 import React from 'react';
 import { Box, Button, Card, CardContent, Typography, CircularProgress } from '@mui/material';
-import { useAuth } from './Context/AuthContext';
+
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../Context/AuthContext';
 
 const Profile = () => {
     const { user, logout } = useAuth(); // Accessing user context and logout function

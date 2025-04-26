@@ -1,26 +1,28 @@
-import { useEffect } from "react";
-import { useAuth } from "./AuthContext";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
+import Routing from '../Routing/Routing';
+
 
 const Root = () => {
-    const { user } = useAuth(); 
-    const navigate = useNavigate(); 
-    useEffect(() => {
-        // If the user exists (logged in)
-        if (user) {
-            if (user.role === 'admin') {
-                navigate('/admin/dashboard'); 
-            } else if (user.role === 'user') {
-                navigate('/profile');  
-            } else {
-                navigate('/login');  
-            }
-        } else {
-            navigate('/login');  
-        }
-    }, [user, navigate]); 
+  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    return null; 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsAuthenticated(true);  // User is authenticated
+    } else {
+      setIsAuthenticated(false);  // User is not authenticated
+      navigate("/login");  // Redirect to login if not authenticated
+    }
+  }, []);
+
+  return (
+    <Router>
+      {isAuthenticated && <Routing />} {/* Render the routes only if authenticated */}
+    </Router>
+  );
 };
 
 export default Root;

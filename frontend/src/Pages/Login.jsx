@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { TextField, Button, Box } from '@mui/material';
 import axios from 'axios';
-import { useAuth } from './Context/AuthContext';
+
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../Context/AuthContext';
 
 const LoginForm = () => {
     
@@ -15,7 +16,7 @@ const LoginForm = () => {
     useEffect(() => {
         if (loggedUser) {
             if (loggedUser.role === 'admin') {
-                navigate('/admin/dashboard');
+                navigate('/main/dashboard');
             } else if (loggedUser.role === 'user') {
                 navigate('/profile'); // or any user dashboard route
             }
@@ -32,7 +33,7 @@ const LoginForm = () => {
             login(loggedUser, token); // sets user in context
 
             if (loggedUser.role === 'admin') {
-                navigate('/profile');
+                navigate('/main/dashboard');
             } else {
                 navigate('/profile');
             }
